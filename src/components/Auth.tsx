@@ -61,20 +61,16 @@ const Auth: React.FC = () => {
   return (
     <div>
           <form className='data-content' onSubmit={sendData}>
-            <label htmlFor="fname">First name:</label>
+            <label className='title-label' htmlFor="fname">First name:</label>
             <input type="text" id="fname" name="fname" />
-            {errors.fname && <p style={{ color: "red" }}>{errors.fname}</p>}
-            <label htmlFor="lname">Last name:</label>
+            {errors.fname && <p className='error'>{errors.fname}</p>}
+            <label className='title-label' htmlFor="lname">Last name:</label>
             <input type="text" id="lname" name="lname" />
-            {errors.lname && <p style={{ color: "red" }}>{errors.lname}</p>}
-            <input type="submit" value="Submit" />
+            {errors.lname && <p className='error'>{errors.lname}</p>}
+            <input className='submit-btn' type="submit" value="Submit" />
           </form>
     </div>
     )
 };
 
 export default Auth;
-
-// <form action="/action_page.php" autoComplete="on">
-
-// </form>

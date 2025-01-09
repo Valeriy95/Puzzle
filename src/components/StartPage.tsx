@@ -1,22 +1,34 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import '../styles/startPage.scss';
+import ConfirmExit from './ConfirmExit';
 
 const StartPage: React.FC = () => {
 
     const navigate = useNavigate();
+    const [isModalOpen, setIsModalOpen] = useState(false);
 
-    function logout () {
-        console.log('fdfsdfs')
-        localStorage.clear();
-        navigate('/');
+    const openModal = () => {
+        setIsModalOpen(true);
     }
+
+    const logout = () => {
+        setIsModalOpen(false);
+        localStorage.clear();
+        navigate("/");
+    };
+
+    const closeModal = () => {
+        setIsModalOpen(false);
+    };
 
   return (
     <div>
-        <nav>
-            <li className='exit' onClick={logout}>Exit</li>
+        <nav className='navigation'>
+            <li className='exit' onClick={openModal}></li>
         </nav>
         <h1>Start Page</h1>
+        {isModalOpen && <ConfirmExit onClose={closeModal} onLogout={logout}/>}
     </div>
     );
 };

@@ -1,0 +1,17 @@
+.navigation {
+    display: flex;
+    justify-content: end;
+    padding: 10px 20px;
+}
+
+.exit {
+    background-image: url('../assets/icon/icons8-выход-50.png');
+    list-style-type:  none;
+    background-size: contain;
+    width: 30px;
+    height: 30px;
+}
+
+.exit:hover {
+    cursor: pointer;
+}

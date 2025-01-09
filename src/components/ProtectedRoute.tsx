@@ -12,13 +12,6 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ redirectTo, children })
   console.log(hasValue)
   return hasValue ? <Navigate to={redirectTo} /> : <>{children}</>;
 
-  // Если данных нет, перенаправляем пользователя
-//   if (!hasValue) {
-//     return <Navigate to={redirectTo} />;
-//   }
-
-//   // Если данные есть, отображаем дочерний компонент
-//   return <>{children}</>;
 };
 
 export default ProtectedRoute;

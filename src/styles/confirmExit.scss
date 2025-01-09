@@ -1,34 +1,31 @@
 $btn-color: #05386b;
 $font-color: #eaf6de;
 
-.data-content {
-    display: flex;
+.confirm-exit-window {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
     height: 100vh;
-    flex-direction: column;
+    background-color: rgba(0, 0, 0, 0.8);
+    display: flex;
     justify-content: center;
     align-items: center;
 }
 
-#fname,
-#lname {
-    margin-bottom: 30px;
-    font-family: "Roboto", serif;
-    width: 200px;
-    height: 30px;
-    border: 1px solid $font-color;
-    border-radius: 10px;
-    background-color: $font-color;
-}
-
-.title-label {
-    color: #ffffff;
+.title-confirm-exit {
     font-family: "Roboto", serif;
     font-size: 18px;
     font-weight: 500;
-    margin-bottom: 5px;
+    color: #ffffff;
 }
 
-.submit-btn {
+.container-confirm-exit-btn {
+    display: flex;
+    justify-content: space-around;
+}
+
+.confirm-exit-btn {
     background-color: $btn-color;
     border: 1px solid $btn-color;
     border-radius: 10px;
@@ -39,17 +36,9 @@ $font-color: #eaf6de;
     transition: 0.5s;
 }
 
-.submit-btn:hover {
+.confirm-exit-btn:hover {
     cursor: pointer;
     background-color: #0a66c2;
     border: 1px solid #0a66c2;
     transition: 0.5s;
-}
-
-.error {
-    font-family: "Roboto", serif;
-    color: #f80000;
-    font-size: 16px;
-    font-weight: 500;
-    margin-top: 0px;
 }
