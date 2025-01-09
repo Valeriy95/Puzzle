@@ -1,3 +1,6 @@
+$font-color: #eaf6de;
+$btn-color: #05386b;
+
 .navigation {
     display: flex;
     justify-content: end;
@@ -14,4 +17,55 @@
 
 .exit:hover {
     cursor: pointer;
+}
+
+.content-start-page {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 90vh;
+}
+
+.title-start-page {
+    // font-family: "Roboto", serif;
+    font-family: "Archivo Black", serif;
+    color: #eaf6de;
+    font-size: 35px;
+    letter-spacing: 10px;
+    font-weight: 700;
+}
+
+.text-start-page,
+.greeting-start-page {
+    width: 60%;
+    font-family: "Roboto", serif;
+    color: #eaf6de;
+    font-size: 18px;
+    // margin-left: auto;
+    // margin-right: auto;
+    text-align: center;
+}
+
+.greeting-start-page {
+    font-size: 26px;
+    font-weight: 700;
+}
+
+.start-btn {
+    background-color: $btn-color;
+    border: 1px solid $btn-color;
+    border-radius: 10px;
+    color: $font-color;
+    font-family: "Roboto", serif;
+    font-size: 18px;
+    padding: 10px 20px;
+    transition: 0.5s;
+}
+
+.start-btn:hover {
+    cursor: pointer;
+    background-color: #0a66c2;
+    border: 1px solid #0a66c2;
+    transition: 0.5s;
 }
