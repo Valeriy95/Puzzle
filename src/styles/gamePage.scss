@@ -1,6 +1,25 @@
 $btn-color: #05386b;
 $font-color: #eaf6de;
 
+.game-page-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.result-block-container {
+    height: 568px;
+
+    width: 80%;
+    display: flex;
+    flex-direction: column;
+    // gap: 10px;
+}
+
+.source-data-block {
+    width: 80%;
+}
 .source-data-block,
 .result-block {
     display: flex;
@@ -8,6 +27,12 @@ $font-color: #eaf6de;
     justify-content: center;
     flex-wrap: wrap;
     min-height: 50px;
+}
+
+.result-block {
+    display: flex;
+    width: 100%; /* Растягивается на всю ширину контейнера */
+    justify-content: flex-start;
 }
 
 .block-word {
@@ -19,6 +44,7 @@ $font-color: #eaf6de;
     // font-size: 18px;
     transition: 0.5s;
 
+    flex-grow: 1;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -33,6 +59,24 @@ $font-color: #eaf6de;
 }
 
 // .block-word {
+//     text-align: center;
+//     padding: 10px;
+//     background-color: #e6e6e6;
+//     border: 1px solid #ccc;
+//     border-radius: 5px;
+//     box-sizing: border-box; /* Учитывает padding в ширине */
+//     flex-grow: 1; /* Позволяет равномерно распределять ширину между словами */
+//     margin: 0 2px; /* Небольшое расстояние между словами */
+//     min-width: 0; /* Для предотвращения переполнения */
+// }
+
+// .block-word {
+//     flex-grow: 0;
+//     flex-shrink: 0;
+//     flex-basis: auto;
+// }
+
+// .block-word {
 //     font-size: max(12px, min(20px, calc(16px - var(--word-length, 5) * 0.5px)));
 // }
 
@@ -42,3 +86,36 @@ $font-color: #eaf6de;
     border: 1px solid #0a66c2;
     transition: 0.5s;
 }
+
+.continue-btn {
+    width: 180px;
+    background-color: $btn-color;
+    color: $font-color;
+    border: 1px solid $font-color;
+    font-family: "Roboto", serif;
+    padding: 10px 20px;
+    border-radius: 10px;
+    font-size: 18px;
+    transition: 0.5s;
+}
+
+.continue-btn:hover {
+    cursor: pointer;
+    background-color: #0a66c2;
+    border: 1px solid #0a66c2;
+    transition: 0.5s;
+}
+
+.background-image {
+    // background-image: url(../assets/images/level1/deerhunt.jpg);
+    height: 500px;
+    width: 80%;
+}
+
+.background-image-container {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
