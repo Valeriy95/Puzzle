@@ -210,9 +210,13 @@ const GamePage: React.FC = () => {
     targetIndex?: number,
     sentenceIndex?: number
   ) => {
-    if (!draggedWord || dragSource === null) return;
+    if (!draggedWord || dragSource === null) {
+      console.log('11111111111111')
+      return;
+    }
 
     if (sentenceIndex !== undefined && guessedSentences[sentenceIndex]) {
+      console.log('22222222222222')
       return; // Игнорируем перетаскивание для угаданных предложений
     }
 
@@ -223,17 +227,24 @@ const GamePage: React.FC = () => {
       draggedSentenceIndex !== null &&
       sentenceIndex === draggedSentenceIndex
     ) {
+      console.log('33333333333333')
+      console.log(resultWords)
       setResultWords((prev) => {
         const updated = [...prev];
         const currentSentence = [...updated[draggedSentenceIndex]];
 
         if (draggedIndex !== null && targetIndex !== undefined) {
           // Перемещаем слово внутри предложения
+          console.log('YYYYYYYYYYYYYYYYYY')
           const [movedWord] = currentSentence.splice(draggedIndex, 1);
-          currentSentence.splice(targetIndex, 0, movedWord);
+          console.log(movedWord)
+          // currentSentence.splice(targetIndex, 0, movedWord);
+          console.log(currentSentence.splice(targetIndex, 0, movedWord))
+          console.log(currentSentence)
         }
 
         updated[draggedSentenceIndex] = currentSentence;
+        console.log(updated)
         return updated;
       });
     }
@@ -244,6 +255,7 @@ const GamePage: React.FC = () => {
       target === "result" &&
       sentenceIndex !== undefined
     ) {
+      console.log('44444444444444')
       setSourceWords((prev) => prev.filter((word) => word.id !== draggedWord.id));
       setResultWords((prev) => {
         const updated = [...prev];
@@ -265,7 +277,9 @@ const GamePage: React.FC = () => {
     // Если перетаскивание из блока результата обратно в исходный блок
     else if (dragSource === "result" && target === "source") {
 
+      console.log('5555555555555555555')
       if (draggedSentenceIndex !== null && isSentenceGuessed(draggedSentenceIndex)) {
+        console.log('66666666666666666')
         return;
       }
 
@@ -306,6 +320,7 @@ const GamePage: React.FC = () => {
     index: number,
     sentenceIndex?: number
   ) => {
+    // e.preventDefault();
     const touch = e.touches[0];
     const target = e.currentTarget;
     
@@ -414,8 +429,12 @@ const GamePage: React.FC = () => {
 
     handleDrop(target, targetIndex, sentenceIndex)
 
+    console.log(` target --- ${target }`);
     console.log(isResultTarget && target === "result")
     console.log(isSourceTarget && target === "source")
+    console.log(`targetIndex  ---  ${targetIndex}`)
+    console.log(`sentenceIndex  ---  ${sentenceIndex}`)
+    console.log('TOOOOOOOOOOOOOOOOOOOOOUUUUUUUUUUUCCCCCCCCCCCHHHHHHHHHHHH')
 
     // if (isResultTarget && target === "result") {
     //   handleDrop("result", targetIndex, sentenceIndex);
@@ -424,12 +443,12 @@ const GamePage: React.FC = () => {
     // }
   
     // Сброс временных данных
-    setDraggedWord(null);
-    setDragSource(null);
-    setDraggedIndex(null);
-    setDraggedSentenceIndex(null);
-    console.log(resultWords)
-    console.log(sentence)
+    // setDraggedWord(null);
+    // setDragSource(null);
+    // setDraggedIndex(null);
+    // setDraggedSentenceIndex(null);
+    // console.log(resultWords)
+    // console.log(sentence)
   };
 
 
@@ -444,6 +463,7 @@ const GamePage: React.FC = () => {
 
   useEffect(() => {
     console.log(sourceWords)
+    console.log(resultWords)
     // checkCompletion();
     const currentWords = resultWords[resultWords.length - 1] || [];
     setIsCheckButtonVisible(currentWords.length === initialWords.length);
@@ -496,9 +516,9 @@ const GamePage: React.FC = () => {
               if (!guessedSentences[sentenceIndex]) handleDrop("result", undefined, sentenceIndex);
             }}
 
-            // onTouchEnd={(e) => {
-            //   if (!guessedSentences[sentenceIndex]) handleTouchEnd(e, "result", undefined, sentenceIndex);
-            // }}
+            onTouchEnd={(e) => {
+              if (!guessedSentences[sentenceIndex]) handleTouchEnd(e, "result", undefined, sentenceIndex);
+            }}
             
             // onTouchEnd={(e) => { handleTouchEnd(e, "result", undefined, sentenceIndex)}}
 
