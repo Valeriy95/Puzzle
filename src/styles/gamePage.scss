@@ -11,7 +11,7 @@ $font-color: #eaf6de;
 .result-block-container {
     height: 568px;
 
-    width: 80%;
+    width: 100%;
     display: flex;
     flex-direction: column;
     // gap: 10px;
@@ -27,6 +27,7 @@ $font-color: #eaf6de;
     justify-content: center;
     flex-wrap: wrap;
     min-height: 50px;
+    background: #379683;
 }
 
 .result-block {
@@ -87,7 +88,9 @@ $font-color: #eaf6de;
     transition: 0.5s;
 }
 
-.continue-btn {
+.continue-btn,
+.check-btn,
+.auto-fill-btn {
     width: 180px;
     background-color: $btn-color;
     color: $font-color;
@@ -99,7 +102,14 @@ $font-color: #eaf6de;
     transition: 0.5s;
 }
 
-.continue-btn:hover {
+.auto-fill-btn {
+    margin-bottom: 30px;
+    border: 1px solid $btn-color;
+}
+
+.continue-btn:hover,
+.check-btn:hover,
+.auto-fill-btn-hover:hover {
     cursor: pointer;
     background-color: #0a66c2;
     border: 1px solid #0a66c2;
@@ -109,7 +119,11 @@ $font-color: #eaf6de;
 .background-image {
     // background-image: url(../assets/images/level1/deerhunt.jpg);
     height: 500px;
-    width: 80%;
+    width: 54%;
+    background-size: contain;
+    background-repeat: no-repeat;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 .background-image-container {
@@ -119,3 +133,57 @@ $font-color: #eaf6de;
     align-items: center;
 }
 
+.correct {
+    background-color: lightgreen; /* Правильные слова */
+}
+  
+.incorrect {
+    background-color: lightcoral; /* Ошибочные слова */
+}
+
+.block-word.auto-filled {
+    animation: autoFill 0.5s ease-in-out;
+}
+  
+@keyframes autoFill {
+    0% {
+      transform: scale(0.8);
+      opacity: 0.5;
+    }
+    100% {
+      transform: scale(1);
+      opacity: 1;
+    }
+}
+
+.game-container {
+    width: 80%;
+    display: flex;
+    flex-direction: column;
+    align-items: end;
+}
+
+.disabled {
+    opacity: 0.5;
+}
+
+.test1 {
+    background-color: #000000;
+}
+
+// .test2 {
+//     background-color: #ffffff;
+// }
+
+.block-word-guessed:hover {
+    cursor: auto;
+    background-color: $btn-color;
+    border: 1px solid $font-color;
+}
+
+.dragging-element {
+    z-index: 1000;
+    opacity: 0.8;
+    transform: scale(1.1);
+    pointer-events: none; /* Prevent interaction */
+}
