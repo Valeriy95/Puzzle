@@ -25,6 +25,8 @@ const GamePage: React.FC = () => {
 
   const [isCheckButtonVisible, setIsCheckButtonVisible] = useState<boolean>(false);
 
+  const [isTranslate, setIsTranslate] = useState<boolean>(false);
+
   const [checkResults, setCheckResults] = useState<
   { word: string; isCorrect: boolean }[]
 >([]);
@@ -51,7 +53,14 @@ const GamePage: React.FC = () => {
     return wordCollectionLevel1.rounds[round].words[sentence].textExample.split(" ");
   };
 
+  const getTranslation = () => {
+    return wordCollectionLevel1.rounds[round].words[sentence].textExampleTranslate;
+  };
+
+
   const [initialWords, setInitialWords] = useState<string[]>(getInitialWords());
+
+  const [sentenceTranslation, setSentenceTranslation] = useState<string>(getTranslation());
 
   const shuffle = (array: WordWithIndex[]) => {
     return array.sort(() => Math.random() - 0.5);
@@ -97,6 +106,7 @@ const GamePage: React.FC = () => {
         setGuessedSentences((prev) => {
           const updated = [...prev];
           updated[resultWords.length - 1] = true; // Помечаем текущее предложение как угаданное
+          setIsTranslate(true);
           return updated;
         });
       }
@@ -107,6 +117,10 @@ const GamePage: React.FC = () => {
 
   const handleContinue = () => {
     console.log(round)
+    const sourceBlock = document.querySelector('.source-data-block')
+    sourceBlock?.classList.remove('testt')
+    const resultBlock = document.querySelectorAll('.result-block')
+    resultBlock[resultBlock.length - 1]?.classList.remove('testt')
     if (sentence < wordCollectionLevel1.rounds[round].words.length - 1) {
       
       // Добавляем текущее предложение в allSentences
@@ -114,6 +128,7 @@ const GamePage: React.FC = () => {
 
       setSentence((prev) => prev + 1);
       setSourceWords([]);
+      setIsTranslate(false);
       // setIsButtonActive(false);
       setResultWords((prev) => [...prev]); 
 
@@ -173,6 +188,7 @@ const GamePage: React.FC = () => {
   
     // Деактивируем кнопку проверки
     setIsButtonActive(true);
+    setIsTranslate(true);
   
     // Опционально: показываем проверку результата
     setCheckResults(initialWords.map((word, index) => ({ word, isCorrect: true })));
@@ -185,6 +201,12 @@ const GamePage: React.FC = () => {
     index: number,
     sentenceIndex?: number
   ) => {
+
+    const sourceBlock = document.querySelector('.source-data-block')
+    sourceBlock?.classList.add('testt')
+    const resultBlock = document.querySelectorAll('.result-block')
+    resultBlock[resultBlock.length - 1]?.classList.add('testt')
+
     setDraggedWord(wordObj);
     setDragSource(source);
     setDraggedIndex(index);
@@ -210,6 +232,12 @@ const GamePage: React.FC = () => {
     targetIndex?: number,
     sentenceIndex?: number
   ) => {
+
+    const sourceBlock = document.querySelector('.source-data-block')
+    sourceBlock?.classList.remove('testt')
+    const resultBlock = document.querySelectorAll('.result-block')
+    resultBlock[resultBlock.length - 1]?.classList.remove('testt')
+
     if (!draggedWord || dragSource === null) {
       console.log('11111111111111')
       return;
@@ -313,55 +341,55 @@ const GamePage: React.FC = () => {
 
   const [draggingElement, setDraggingElement] = useState<HTMLElement | null>(null);
 
-  const handleTouchStart = (
-    e: React.TouchEvent<HTMLDivElement>,
-    wordObj: WordWithIndex,
-    source: string,
-    index: number,
-    sentenceIndex?: number
-  ) => {
-    // e.preventDefault();
-    const touch = e.touches[0];
-    const target = e.currentTarget;
+  // const handleTouchStart = (
+  //   e: React.TouchEvent<HTMLDivElement>,
+  //   wordObj: WordWithIndex,
+  //   source: string,
+  //   index: number,
+  //   sentenceIndex?: number
+  // ) => {
+  //   // e.preventDefault();
+  //   const touch = e.touches[0];
+  //   const target = e.currentTarget;
     
-    // Clone the element for visual feedback
-    const clone = target.cloneNode(true) as HTMLElement;
-    clone.style.position = "absolute";
-    clone.style.top = `${touch.clientY}px`;
-    clone.style.left = `${touch.clientX}px`;
-    clone.style.pointerEvents = "none";
-    clone.classList.add("dragging-element");
+  //   // Clone the element for visual feedback
+  //   const clone = target.cloneNode(true) as HTMLElement;
+  //   clone.style.position = "absolute";
+  //   clone.style.top = `${touch.clientY}px`;
+  //   clone.style.left = `${touch.clientX}px`;
+  //   clone.style.pointerEvents = "none";
+  //   clone.classList.add("dragging-element");
     
-    document.body.appendChild(clone);
-    setDraggingElement(clone);
+  //   document.body.appendChild(clone);
+  //   setDraggingElement(clone);
     
-    // Set dragging state
-    setDraggedWord(wordObj);
-    setDragSource(source);
-    setDraggedIndex(index);
-    if (sentenceIndex !== undefined) {
-      setDraggedSentenceIndex(sentenceIndex);
-    }
-    // setDraggedWord(wordObj);
-    // setDragSource(source);
-    // setDraggedIndex(index);
-    // if (sentenceIndex !== undefined) {
-    //   setDraggedSentenceIndex(sentenceIndex);
-    // }
-    console.log(resultWords)
-    console.log(sentence)
-  };
+  //   // Set dragging state
+  //   setDraggedWord(wordObj);
+  //   setDragSource(source);
+  //   setDraggedIndex(index);
+  //   if (sentenceIndex !== undefined) {
+  //     setDraggedSentenceIndex(sentenceIndex);
+  //   }
+  //   // setDraggedWord(wordObj);
+  //   // setDragSource(source);
+  //   // setDraggedIndex(index);
+  //   // if (sentenceIndex !== undefined) {
+  //   //   setDraggedSentenceIndex(sentenceIndex);
+  //   // }
+  //   console.log(resultWords)
+  //   console.log(sentence)
+  // };
   
-  const handleTouchMove = (e: React.TouchEvent<HTMLDivElement>) => {
-    // e.preventDefault();
-    const touch = e.touches[0];
-    const width = e.touches[0].target?.clientWidth / 4;
+  // const handleTouchMove = (e: React.TouchEvent<HTMLDivElement>) => {
+  //   // e.preventDefault();
+  //   const touch = e.touches[0];
+  //   const width = e.touches[0].target?.clientWidth / 4;
   
-    if (draggingElement) {
-      draggingElement.style.top = `${touch.clientY - 20}px`;
-      draggingElement.style.left = `${touch.clientX - width}px`;
-    }
-  };
+  //   if (draggingElement) {
+  //     draggingElement.style.top = `${touch.clientY - 20}px`;
+  //     draggingElement.style.left = `${touch.clientX - width}px`;
+  //   }
+  // };
   
   // const handleTouchEnd = (
   //   e: React.TouchEvent<HTMLDivElement>,
@@ -383,83 +411,56 @@ const GamePage: React.FC = () => {
   //   const isResultTarget = element.closest(".result-block");
   //   const isSourceTarget = element.closest(".source-data-block");
   
+  //   // console.log(` target --- ${target }`);
+  //   // console.log(` isResultTarget --- ${isResultTarget}`);
+  //   // console.log(` isSourceTarget --- ${isSourceTarget}`);
+
+  //   handleDrop(target, targetIndex, sentenceIndex)
+
   //   console.log(` target --- ${target }`);
-  //   console.log(` isResultTarget --- ${isResultTarget}`);
-  //   console.log(` isSourceTarget --- ${isSourceTarget}`);
+  //   console.log(isResultTarget && target === "result")
+  //   console.log(isSourceTarget && target === "source")
+  //   console.log(`targetIndex  ---  ${targetIndex}`)
+  //   console.log(`sentenceIndex  ---  ${sentenceIndex}`)
+  //   console.log('TOOOOOOOOOOOOOOOOOOOOOUUUUUUUUUUUCCCCCCCCCCCHHHHHHHHHHHH')
 
-
-  //   if (isResultTarget && target === "result") {
-  //     handleDrop("result", targetIndex, sentenceIndex);
-  //   } else if (isSourceTarget && target === "source") {
-  //     handleDrop("source");
-  //   }
+  //   // if (isResultTarget && target === "result") {
+  //   //   handleDrop("result", targetIndex, sentenceIndex);
+  //   // } else if (isSourceTarget && target === "source") {
+  //   //   handleDrop("source");
+  //   // }
   
   //   // Сброс временных данных
-  //   setDraggedWord(null);
-  //   setDragSource(null);
-  //   setDraggedIndex(null);
-  //   setDraggedSentenceIndex(null);
-  //   console.log(resultWords)
-  //   console.log(sentence)
+  //   // setDraggedWord(null);
+  //   // setDragSource(null);
+  //   // setDraggedIndex(null);
+  //   // setDraggedSentenceIndex(null);
+  //   // console.log(resultWords)
+  //   // console.log(sentence)
   // };
 
-  const handleTouchEnd = (
-    e: React.TouchEvent<HTMLDivElement>,
-    target: string,
-    targetIndex?: number,
-    sentenceIndex?: number
-  ) => {
-    // e.preventDefault();
-    const touch = e.changedTouches[0];
-    const element = document.elementFromPoint(touch.clientX, touch.clientY);
-
-    if (draggingElement) {
-      draggingElement.remove();
-      setDraggingElement(null);
+  const handleTranslate = () => {
+    if (!isTranslate) {
+      setIsTranslate(true);
+    } else {
+      setIsTranslate(false);
     }
-  
-    if (!draggedWord || dragSource === null || !element) return;
-  
-    const isResultTarget = element.closest(".result-block");
-    const isSourceTarget = element.closest(".source-data-block");
-  
-    // console.log(` target --- ${target }`);
-    // console.log(` isResultTarget --- ${isResultTarget}`);
-    // console.log(` isSourceTarget --- ${isSourceTarget}`);
-
-    handleDrop(target, targetIndex, sentenceIndex)
-
-    console.log(` target --- ${target }`);
-    console.log(isResultTarget && target === "result")
-    console.log(isSourceTarget && target === "source")
-    console.log(`targetIndex  ---  ${targetIndex}`)
-    console.log(`sentenceIndex  ---  ${sentenceIndex}`)
-    console.log('TOOOOOOOOOOOOOOOOOOOOOUUUUUUUUUUUCCCCCCCCCCCHHHHHHHHHHHH')
-
-    // if (isResultTarget && target === "result") {
-    //   handleDrop("result", targetIndex, sentenceIndex);
-    // } else if (isSourceTarget && target === "source") {
-    //   handleDrop("source");
-    // }
-  
-    // Сброс временных данных
-    // setDraggedWord(null);
-    // setDragSource(null);
-    // setDraggedIndex(null);
-    // setDraggedSentenceIndex(null);
-    // console.log(resultWords)
-    // console.log(sentence)
-  };
-
+  }
 
   useEffect(() => {
     const newInitialWords = getInitialWords();
+    const sentenceTranslation = getTranslation();
     console.log(newInitialWords)
     setInitialWords(newInitialWords);
+    setSentenceTranslation(sentenceTranslation);
     setSourceWords(shuffle(generateIndexedWords(newInitialWords))); // Генерируем объекты с ID и перемешиваем
     setResultWords((prev) => [...prev, []]); // Новый пустой массив для результата
     setIsButtonActive(false);
   }, [sentence]);
+
+  // useEffect(() => {
+
+  // }, [isTranslate]);
 
   useEffect(() => {
     console.log(sourceWords)
@@ -493,14 +494,25 @@ const GamePage: React.FC = () => {
     ) : (
       // Если игра не завершена, отображаем result-block-container
       <div className='game-container'>
-      <div>
-        <button
-        onClick={handleAutoFill}
-        className={`auto-fill-btn ${isChecked || resultWords[resultWords.length - 1]?.length === initialWords.length ? "disabled" : "auto-fill-btn-hover"}`}
-        disabled={isChecked || resultWords[resultWords.length - 1]?.length === initialWords.length}
-        >
-          Auto-Complete 
-        </button>
+      <div className='auto-fill-btn-container'>
+          <button
+            onClick={handleTranslate} 
+            className={`translate-btn ${isTranslate ? "disabled" : ""}`}
+            >
+            <div className='translate-btn-img'>
+            </div>
+          </button>
+          <button
+            onClick={handleAutoFill}
+            className={`auto-fill-btn ${isChecked || resultWords[resultWords.length - 1]?.length === initialWords.length ? "disabled" : "auto-fill-btn-hover"}`}
+            disabled={isChecked || resultWords[resultWords.length - 1]?.length === initialWords.length}
+          >
+            Auto-Complete 
+          </button>
+      </div>
+      <div className='sentence-translation-container'>
+      {isTranslate ? (
+        <p>{sentenceTranslation}</p> ) : (null) }
       </div>
       <div className="result-block-container"> 
         {resultWords.map((sentenceWords, sentenceIndex) => (
@@ -511,14 +523,13 @@ const GamePage: React.FC = () => {
               if (!guessedSentences[sentenceIndex]) allowDrop(e);
             }}
 
-            // onDrop={() => handleDrop("result", undefined, sentenceIndex)}>
             onDrop={() => {
               if (!guessedSentences[sentenceIndex]) handleDrop("result", undefined, sentenceIndex);
             }}
 
-            onTouchEnd={(e) => {
-              if (!guessedSentences[sentenceIndex]) handleTouchEnd(e, "result", undefined, sentenceIndex);
-            }}
+            // onTouchEnd={(e) => {
+            //   if (!guessedSentences[sentenceIndex]) handleTouchEnd(e, "result", undefined, sentenceIndex);
+            // }}
             
             // onTouchEnd={(e) => { handleTouchEnd(e, "result", undefined, sentenceIndex)}}
 
@@ -574,13 +585,13 @@ const GamePage: React.FC = () => {
                 //     : undefined
                 // }
 
-                onTouchStart={(e) => handleTouchStart(e, { word, id }, "result", wordIndex, sentenceIndex)}
+                // onTouchStart={(e) => handleTouchStart(e, { word, id }, "result", wordIndex, sentenceIndex)}
 
-                onTouchMove={handleTouchMove}
+                // onTouchMove={handleTouchMove}
                 // onTouchEnd={(e) => handleTouchEnd(e, "result", wordIndex, sentenceIndex)}
 
                 // onTouchEnd={!isGuessed ? (e) => handleTouchEnd(e, "result", wordIndex, sentenceIndex) : undefined}
-                onTouchEnd={(e) => handleTouchEnd(e, "result", wordIndex, sentenceIndex)}
+                // onTouchEnd={(e) => handleTouchEnd(e, "result", wordIndex, sentenceIndex)}
 
                 onDrop={!isGuessed ? () => handleDrop("result", wordIndex, sentenceIndex) : undefined}
 
@@ -608,7 +619,7 @@ const GamePage: React.FC = () => {
 
         onDrop={() => handleDrop("source")}
         
-        onTouchEnd={(e) => handleTouchEnd(e, "source")}
+        // onTouchEnd={(e) => handleTouchEnd(e, "source")}
         >
         {sourceWords.map(({ word, id }) => (
           <div
@@ -618,7 +629,7 @@ const GamePage: React.FC = () => {
             draggable
             onDragStart={() => handleDragStart({ word, id }, "source", 0)}
 
-            onTouchStart={(e) => handleTouchStart(e, { word, id }, "source", 0)}
+            // onTouchStart={(e) => handleTouchStart(e, { word, id }, "source", 0)}
             // onDragStart={() => handleDragStart({ word, id }, "source")}
             style={{ "--word-length": word.length } as React.CSSProperties}
             onClick={() => handleWordClick({ word, id }, true)}
