@@ -27,6 +27,8 @@ const GamePage: React.FC = () => {
 
   const [isTranslate, setIsTranslate] = useState<boolean>(false);
 
+  const [isVolume, setIsVolume] = useState<boolean>(false);
+
   const [checkResults, setCheckResults] = useState<
   { word: string; isCorrect: boolean }[]
 >([]);
@@ -38,6 +40,8 @@ const GamePage: React.FC = () => {
   const [guessedSentences, setGuessedSentences] = useState<boolean[]>([]);
 
   const backgroundImage = `/images/${wordCollectionLevel1.rounds[round].levelData.imageSrc}`;
+
+  // const audio = `${wordCollectionLevel1.rounds[round].words[sentence].audioExample}`;
 
   const authorImg = `${wordCollectionLevel1.rounds[round].levelData.author}`;
   const yearImg = `${wordCollectionLevel1.rounds[round].levelData.year}`;
@@ -53,14 +57,20 @@ const GamePage: React.FC = () => {
     return wordCollectionLevel1.rounds[round].words[sentence].textExample.split(" ");
   };
 
+
   const getTranslation = () => {
     return wordCollectionLevel1.rounds[round].words[sentence].textExampleTranslate;
   };
 
+  const getAudio = () => {
+    return wordCollectionLevel1.rounds[round].words[sentence].audioExample
+  };
 
   const [initialWords, setInitialWords] = useState<string[]>(getInitialWords());
 
   const [sentenceTranslation, setSentenceTranslation] = useState<string>(getTranslation());
+
+  const [srcAudio, setscrAudio] = useState<string>(getAudio());
 
   const shuffle = (array: WordWithIndex[]) => {
     return array.sort(() => Math.random() - 0.5);
@@ -103,6 +113,7 @@ const GamePage: React.FC = () => {
       setIsCheckButtonVisible(false);
 
       if (isCorrect) {
+        setIsVolume(true)
         setGuessedSentences((prev) => {
           const updated = [...prev];
           updated[resultWords.length - 1] = true; // Помечаем текущее предложение как угаданное
@@ -129,6 +140,7 @@ const GamePage: React.FC = () => {
       setSentence((prev) => prev + 1);
       setSourceWords([]);
       setIsTranslate(false);
+      setIsVolume(false)
       // setIsButtonActive(false);
       setResultWords((prev) => [...prev]); 
 
@@ -149,6 +161,7 @@ const GamePage: React.FC = () => {
         setAllSentences([]); // Сбрасываем все предложения
         setIsGameComplete(false); // Снимаем флаг завершения игры
         setIsButtonActive(false); // Деактивируем кнопку
+        setIsVolume(false)
         setIsRoundComplete(false); // Сбрасываем состояние раунда
         setGuessedSentences([]); // Очищаем guessedSentences
         console.log("Заново");
@@ -188,7 +201,8 @@ const GamePage: React.FC = () => {
   
     // Деактивируем кнопку проверки
     setIsButtonActive(true);
-    setIsTranslate(true);
+    // setIsTranslate(true);
+    // setIsVolume(true)
   
     // Опционально: показываем проверку результата
     setCheckResults(initialWords.map((word, index) => ({ word, isCorrect: true })));
@@ -439,6 +453,25 @@ const GamePage: React.FC = () => {
   //   // console.log(sentence)
   // };
 
+  const handleToggleVolume = () => {
+    if (!isVolume) {
+      setIsVolume(true);
+    } else {
+      setIsVolume(false);
+    }
+  }
+
+  const handleStartAudio = () => {
+    console.log(srcAudio)
+    const audio = new Audio(`${srcAudio}`);
+    audio.play()
+    // if (!isVolume) {
+    //   audio.play()
+    // } else {
+    //   setIsVolume(false);
+    // }
+  }
+
   const handleTranslate = () => {
     if (!isTranslate) {
       setIsTranslate(true);
@@ -447,12 +480,116 @@ const GamePage: React.FC = () => {
     }
   }
 
+
+  type wordsCollection = {
+    audioExample: string;
+    textExample: string;
+    textExampleTranslate: string;
+    id: number;
+    word: string;
+    wordTranslate: string;
+  }
+  // const arrSentences = wordCollectionLevel1.rounds[round].words;
+  const [arrSentences, setArrSentences] = useState<wordsCollection[]>(wordCollectionLevel1.rounds[round].words);
+
+  function getAllColums(): number[] {
+    return arrSentences.map(v => v.textExample.split(" ").length);
+}
+
+// function getAllColums () {
+//   const arrSentences = wordCollectionLevel1.rounds[round].words;
+//   const arrColums: number[] = [];
+//   arrSentences.forEach(v => {
+//     arrColums.push(v.textExample.split(" ").length);
+//   })
+//   return arrColums;
+// }
+
+  // console.log('AAAA')
+  // console.log(getAllColums());
+  
+  // const getBackgroundStyle = (index: number) => {
+  //   const rows = 10; // Фиксированное число строк
+  //   const colsArray = getAllColums(); // Массив с количеством колонок в каждой строке
+  //   // arrSentences.splice(0, 1)
+  
+  //   let currentRow = 0;
+  //   let currentIndexInRow = index;
+  
+  //   // Определяем, в какой строке находится текущий индекс
+  //   for (let i = 0; i < colsArray.length; i++) {
+  //     if (currentIndexInRow < colsArray[i]) {
+  //       currentRow = i;
+  //       break;
+  //     }
+  //     currentIndexInRow -= colsArray[i]; // Смещаем индекс
+  //   }
+  //   const totalRows = colsArray.length; // Общее количество строк
+  //   // const colsInCurrentRow = colsArray[currentRow]; // Количество колонок в текущей строке
+  //   const colsInCurrentRow = colsArray[sentence];
+  
+  //   const x = (currentIndexInRow / (colsInCurrentRow - 1)) * 100; // X-позиция
+  //   // const y = (currentRow / (totalRows - 1)) * 100; // Y-позиция
+  //   const y = (sentence / (totalRows - 1)) * 100;
+  
+  //   return {
+  //     backgroundImage: `url(${backgroundImage})`,
+  //     backgroundSize: `${Math.max(...colsArray) * 100}% ${totalRows * 100}%`,
+  //     backgroundPosition: `${x}% ${y}%`
+  //   };
+  // };
+
+  // const getBackgroundStyle = (wordIndex: number, sentenceIndex: number) => {
+  //   const rows = 10; // Фиксированное количество строк (предложений)
+  //   const colsArray = getAllColums(); // Количество колонок в каждой строке
+  
+  //   const totalRows = colsArray.length; // Общее число предложений
+  //   const colsInCurrentRow = colsArray[sentenceIndex]; // Количество слов в текущем предложении
+  
+  //   const x = (wordIndex / (colsInCurrentRow - 1)) * 100; // X-позиция внутри строки
+  //   const y = (sentenceIndex / (totalRows - 1)) * 100; // Y-позиция строки
+  
+  //   // return {
+  //   //   backgroundImage: `url(${backgroundImage})`,
+  //   //   backgroundSize: `${Math.max(...colsArray) * 100}% ${totalRows * 100}%`,
+  //   //   backgroundPosition: `${x}% ${y}%`
+  //   // };
+
+  //   return {
+  //     "--bg-image": `url(${backgroundImage})`,
+  //     "--bg-size": `${Math.max(...colsArray) * 100}% ${totalRows * 100}%`,
+  //     "--bg-pos": `${x}% ${y}%`
+  //   } as React.CSSProperties;
+  // };
+
+  const getBackgroundStyle = (wordIndex: number, sentenceIndex: number) => {
+    const colsArray = getAllColums(); // Массив с количеством колонок в каждой строке
+    const totalRows = colsArray.length; // Общее число строк
+    const maxCols = Math.max(...colsArray); // Самая длинная строка (ширина фона)
+  
+    const colsInCurrentRow = colsArray[sentenceIndex]; // Количество слов в текущей строке
+  
+    const x = colsInCurrentRow > 1 ? (wordIndex / (colsInCurrentRow - 1)) * 100 : 0;
+    const y = totalRows > 1 ? (sentenceIndex / (totalRows - 1)) * 100 : 0;
+
+  
+    return {
+      "--bg-image": `url(${backgroundImage})`,
+      // "--bg-size": `${maxCols * 100}% ${totalRows * 100}%`,
+      "--bg-size": `${colsArray[sentenceIndex] * 100}% ${totalRows * 100}%`,
+      "--bg-pos": `${x}% ${y}%`,
+      "--total-cols": colsInCurrentRow
+    } as React.CSSProperties;
+  };
+
   useEffect(() => {
     const newInitialWords = getInitialWords();
     const sentenceTranslation = getTranslation();
+    const newAudio = getAudio();
     console.log(newInitialWords)
     setInitialWords(newInitialWords);
     setSentenceTranslation(sentenceTranslation);
+    setscrAudio(newAudio);
     setSourceWords(shuffle(generateIndexedWords(newInitialWords))); // Генерируем объекты с ID и перемешиваем
     setResultWords((prev) => [...prev, []]); // Новый пустой массив для результата
     setIsButtonActive(false);
@@ -496,6 +633,13 @@ const GamePage: React.FC = () => {
       <div className='game-container'>
       <div className='auto-fill-btn-container'>
           <button
+            onClick={handleToggleVolume} 
+            className={`volume-btn ${isVolume ? "disabled" : ""}`}
+            >
+            <div className='volume-btn-img'>
+            </div>
+          </button>
+          <button
             onClick={handleTranslate} 
             className={`translate-btn ${isTranslate ? "disabled" : ""}`}
             >
@@ -509,6 +653,10 @@ const GamePage: React.FC = () => {
           >
             Auto-Complete 
           </button>
+      </div>
+      <div className='volume-icon-container'>
+      {isVolume ? (
+       <div className='volume-icon' onClick={handleStartAudio}></div>) : (null) }
       </div>
       <div className='sentence-translation-container'>
       {isTranslate ? (
@@ -597,7 +745,21 @@ const GamePage: React.FC = () => {
 
                 onDragOver={allowDrop}
 
-                style={{ "--word-length": word.length } as React.CSSProperties}
+                style={
+                  isGuessed
+                    ? ({
+                        ...getBackgroundStyle(wordIndex, sentenceIndex), // Фоновые стили
+                        "--word-length": word.length, // Длина слова как CSS-переменная
+                      } as React.CSSProperties)
+                    : undefined
+                }
+
+                // style={{
+                //   ...getBackgroundStyle(wordIndex, sentenceIndex), // Фоновые стили
+                //   "--word-length": word.length, // Длина слова как CSS-переменная
+                // } as React.CSSProperties}
+
+                // style={{ "--word-length": word.length } as React.CSSProperties}
 
                 onClick={
                   !isGuessed
@@ -631,7 +793,11 @@ const GamePage: React.FC = () => {
 
             // onTouchStart={(e) => handleTouchStart(e, { word, id }, "source", 0)}
             // onDragStart={() => handleDragStart({ word, id }, "source")}
-            style={{ "--word-length": word.length } as React.CSSProperties}
+            // style={{ "--word-length": word.length} as React.CSSProperties}
+            style={{
+              // ...getBackgroundStyle(wordIndex, sentenceIndex), // Фоновые стили
+              "--word-length": word.length, // Длина слова как CSS-переменная
+            } as React.CSSProperties}
             onClick={() => handleWordClick({ word, id }, true)}
           >
             {word}

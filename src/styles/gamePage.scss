@@ -19,6 +19,7 @@ $font-color: #eaf6de;
 
 .source-data-block {
     width: 80%;
+    overflow: hidden;
 }
 .source-data-block,
 .result-block {
@@ -39,6 +40,7 @@ $font-color: #eaf6de;
 
 .block-word {
     // padding: 10px;
+    box-sizing: border-box;
     position: relative;
     background-color: $btn-color;
     color: $font-color;
@@ -48,36 +50,55 @@ $font-color: #eaf6de;
     transition: 0.5s;
 
     flex-grow: 1;
+    flex-basis: calc(100% / var(--total-cols)); /* Количество колонок в ряду */
+    max-width: unset; /* Убрать ограничение, чтобы flex работал */
+    min-width: unset;
     display: flex;
     justify-content: center;
     align-items: center;
     text-align: center;
     padding: 5px 10px;
 
+    padding: 0;
     width: calc(var(--word-length, 5) * 8px + 20px); /* Базовая ширина с учетом длины слова */
-    min-width: 60px; /* Минимальная ширина */
+    // min-width: 60px; /* Минимальная ширина */
     max-width: 200px; /* Максимальная ширина */
     font-size: calc(14px + (10 / var(--word-length, 5))); /* Динамический размер шрифта */
     white-space: nowrap; /* Убираем перенос текста */
+
+    background-image: var(--bg-image);
+    background-size: var(--bg-size);
+    background-position: var(--bg-pos);
 }
 
-.block-word::before {
-// .block-word::after {
+.block-word::before,
+.block-word-guessed::before {
   content: "";
   position: absolute;
-  background-color: $btn-color;
+//   background-color: $btn-color;
   width: 15px;
   height: 15px;
-  border: 1px solid $font-color;
-  border-radius: 50%;
-  z-index: 1;
-}
-
-.block-word::before {
-  top: 14px;
+  top: 16px;
   left: 100%;
   transform: translateX(-50%);
+  border: 2px solid $font-color;
+  border-top: 0px;
+  border-left: 0px;
+  border-bottom: 0px;
+  border-radius: 50%;
+  z-index: 1;
+
+//   background-image: var(--bg-image);
+//   background-size: var(--bg-size);
+//   background-position: var(--bg-pos);
 }
+
+
+// .block-word::before {
+//   top: 14px;
+//   left: 100%;
+//   transform: translateX(-50%);
+// }
 
 // .block-word::after {
 //   bottom: -8px; /* Выступ снизу */
@@ -107,12 +128,24 @@ $font-color: #eaf6de;
 //     font-size: max(12px, min(20px, calc(16px - var(--word-length, 5) * 0.5px)));
 // }
 
+.source-data-block .block-word:hover,
+.source-data-block .block-word:hover::before,
 .block-word:hover {
     cursor: pointer;
     background-color: #0a66c2;
-    border: 1px solid #0a66c2;
-    transition: 0.5s;
+    border: 2px solid #0a66c2;
+    transition: 0.3s;
 }
+
+.source-data-block .block-word:hover {
+    z-index: 5;
+}
+
+// .block-word:hover::before {
+//     border: 1px solid #0a66c2;
+//     transition: 0.3s;
+// }
+
 
 .continue-btn,
 .check-btn,
@@ -128,7 +161,8 @@ $font-color: #eaf6de;
     transition: 0.5s;
 }
 
-.translate-btn {
+.translate-btn,
+.volume-btn {
     height: 42px;
     width: 60px;
     display: flex;
@@ -140,10 +174,22 @@ $font-color: #eaf6de;
     transition: 0.5s;
 }
 
-.translate-btn-img {
+.translate-btn-img,
+.volume-btn-img,
+.volume-icon {
     width: 30px;
     height: 30px;
+}
+.translate-btn-img {
     background-image: url('../assets/icon/icons8-глаз-30.png');
+}
+
+.volume-btn-img {
+    background-image: url('../assets/icon/icons8-звук-30.png');
+}
+
+.volume-icon {
+    background-image: url('../assets/icon/icons8-звук-30.png');
 }
 
 .auto-fill-btn-container {
@@ -164,10 +210,16 @@ $font-color: #eaf6de;
     font-family: "Roboto", serif;
 }
 
+.volume-icon-container {
+    display: flex;
+    justify-content: center;
+}
+
 .continue-btn:hover,
 .check-btn:hover,
 .auto-fill-btn-hover:hover,
-.translate-btn:hover {
+.translate-btn:hover,
+.volume-btn:hover {
     cursor: pointer;
     background-color: #0a66c2;
     border: 1px solid #0a66c2;
@@ -192,7 +244,7 @@ $font-color: #eaf6de;
 }
 
 .correct {
-    background-color: lightgreen; /* Правильные слова */
+    background-color: lightgreen !important
 }
   
 .incorrect {
@@ -232,6 +284,7 @@ $font-color: #eaf6de;
 // .test2 {
 //     background-color: #ffffff;
 // }
+
 
 .block-word-guessed:hover {
     cursor: auto;
