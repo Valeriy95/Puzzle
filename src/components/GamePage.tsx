@@ -456,8 +456,10 @@ const GamePage: React.FC = () => {
   const handleToggleVolume = () => {
     if (!isVolume) {
       setIsVolume(true);
+      localStorage.setItem("isVolume", '1');
     } else {
       setIsVolume(false);
+      localStorage.setItem("isVolume", '0');
     }
   }
 
@@ -475,8 +477,10 @@ const GamePage: React.FC = () => {
   const handleTranslate = () => {
     if (!isTranslate) {
       setIsTranslate(true);
+      localStorage.setItem("isTranslate", '1');
     } else {
       setIsTranslate(false);
+      localStorage.setItem("isTranslate", '0');
     }
   }
 
@@ -609,6 +613,10 @@ const GamePage: React.FC = () => {
   }, [resultWords]);
 
   useEffect(() => {
+    const storageIsVolume = Boolean(Number(localStorage.getItem("isVolume")));
+    const storageIsTranslate = Boolean(Number(localStorage.getItem("isTranslate")));
+    if (storageIsVolume) setIsVolume(storageIsVolume);
+    if (storageIsTranslate) setIsTranslate(storageIsTranslate);
     if (allSentences.length === 0) {
       setAllSentences([[]]); // Начинаем с пустого предложения
     }
@@ -632,6 +640,17 @@ const GamePage: React.FC = () => {
       // Если игра не завершена, отображаем result-block-container
       <div className='game-container'>
       <div className='auto-fill-btn-container'>
+        <form>
+          <label htmlFor="city-select">Ваш город</label>
+          <select name="city" id="city-select">
+            <option value="1" selected>1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+            <option value="6">6</option>
+          </select>
+        </form>
           <button
             onClick={handleToggleVolume} 
             className={`volume-btn ${isVolume ? "disabled" : ""}`}
@@ -783,7 +802,7 @@ const GamePage: React.FC = () => {
         
         // onTouchEnd={(e) => handleTouchEnd(e, "source")}
         >
-        {sourceWords.map(({ word, id }) => (
+        {sourceWords.map(({ word, id }, wordIndex) => (
           <div
             // key={id}
             key={`source-${id}`} // Добавьте контекст, чтобы ключ был уникален
@@ -795,7 +814,6 @@ const GamePage: React.FC = () => {
             // onDragStart={() => handleDragStart({ word, id }, "source")}
             // style={{ "--word-length": word.length} as React.CSSProperties}
             style={{
-              // ...getBackgroundStyle(wordIndex, sentenceIndex), // Фоновые стили
               "--word-length": word.length, // Длина слова как CSS-переменная
             } as React.CSSProperties}
             onClick={() => handleWordClick({ word, id }, true)}
